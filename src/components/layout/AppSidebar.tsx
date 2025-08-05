@@ -74,11 +74,8 @@ export const AppSidebar: React.FC = () => {
   return (
     <Sidebar 
       variant="sidebar" 
-      className="border-r border-sidebar-border" 
-      style={{
-        '--sidebar-width': isCollapsed ? '4rem' : '13rem',
-        '--sidebar-width-icon': '4rem'
-      } as React.CSSProperties}
+      collapsible="icon"
+      className="border-r border-sidebar-border"
     >
       <SidebarHeader className="p-3 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
@@ -109,7 +106,7 @@ export const AppSidebar: React.FC = () => {
                       isActive={isActive} 
                       className={cn(
                         "h-8 rounded-md transition-all duration-200",
-                        isCollapsed ? "px-2 justify-center" : "px-2", 
+                        isCollapsed ? "w-8 h-8 p-0 justify-center" : "px-2", 
                         !canAccess && "opacity-50 cursor-not-allowed"
                       )} 
                       tooltip={isCollapsed ? item.name : undefined}
@@ -117,7 +114,10 @@ export const AppSidebar: React.FC = () => {
                       <Link 
                         to={item.href} 
                         onClick={!canAccess ? e => e.preventDefault() : undefined} 
-                        className="flex items-center gap-2 w-full"
+                        className={cn(
+                          "flex items-center w-full",
+                          isCollapsed ? "justify-center" : "gap-2"
+                        )}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
                         {!isCollapsed && (
@@ -151,10 +151,16 @@ export const AppSidebar: React.FC = () => {
                   tooltip={isCollapsed ? 'Configurações' : undefined} 
                   className={cn(
                     "h-8 rounded-md transition-all duration-200",
-                    isCollapsed ? "px-2 justify-center" : "px-2"
+                    isCollapsed ? "w-8 h-8 p-0 justify-center" : "px-2"
                   )}
                 >
-                  <Link to="/settings" className="flex items-center gap-2 w-full">
+                  <Link 
+                    to="/settings" 
+                    className={cn(
+                      "flex items-center w-full",
+                      isCollapsed ? "justify-center" : "gap-2"
+                    )}
+                  >
                     <Settings className="h-4 w-4 shrink-0" />
                     {!isCollapsed && (
                       <span className="truncate text-sm">
@@ -172,10 +178,16 @@ export const AppSidebar: React.FC = () => {
                     tooltip={isCollapsed ? 'Upgrade' : undefined} 
                     className={cn(
                       "h-8 rounded-md text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 transition-all duration-200",
-                      isCollapsed ? "px-2 justify-center" : "px-2"
+                      isCollapsed ? "w-8 h-8 p-0 justify-center" : "px-2"
                     )}
                   >
-                    <Link to="/upgrade" className="flex items-center gap-2 w-full">
+                    <Link 
+                      to="/upgrade" 
+                      className={cn(
+                        "flex items-center w-full",
+                        isCollapsed ? "justify-center" : "gap-2"
+                      )}
+                    >
                       <Crown className="h-4 w-4 shrink-0" />
                       {!isCollapsed && (
                         <span className="truncate text-sm">
@@ -193,7 +205,7 @@ export const AppSidebar: React.FC = () => {
                   tooltip={isCollapsed ? 'Sair' : undefined} 
                   className={cn(
                     "h-8 rounded-md transition-all duration-200",
-                    isCollapsed ? "px-2 justify-center" : "px-2"
+                    isCollapsed ? "w-8 h-8 p-0 justify-center" : "px-2"
                   )}
                 >
                   <LogOut className="h-4 w-4 shrink-0" />
@@ -231,6 +243,8 @@ export const AppSidebar: React.FC = () => {
       >
         {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </Button>
+
+      <SidebarRail />
     </Sidebar>
   );
 };
