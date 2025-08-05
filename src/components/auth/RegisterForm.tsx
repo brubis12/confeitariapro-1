@@ -42,19 +42,19 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md bg-card border-border">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
+        <CardTitle className="text-2xl font-bold text-center text-card-foreground">
           Criar conta
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-muted-foreground">
           Comece sua jornada com o sistema de gestão
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Nome completo</Label>
+            <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -63,13 +63,13 @@ export const RegisterForm: React.FC = () => {
                 placeholder="Seu nome completo"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-background border-input text-foreground"
                 required
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-foreground">Email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -78,13 +78,13 @@ export const RegisterForm: React.FC = () => {
                 placeholder="seu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-background border-input text-foreground"
                 required
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
+            <Label htmlFor="password" className="text-foreground">Senha</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -93,23 +93,23 @@ export const RegisterForm: React.FC = () => {
                 placeholder="Sua senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-background border-input text-foreground"
                 required
                 minLength={6}
               />
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading}>
             {loading ? 'Criando conta...' : 'Criar conta'}
           </Button>
         </form>
         
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full" />
+            <Separator className="w-full border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-card px-2 text-muted-foreground">
               ou continue com
             </span>
           </div>
@@ -117,7 +117,7 @@ export const RegisterForm: React.FC = () => {
         
         <Button
           variant="outline"
-          className="w-full"
+          className="w-full border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
           onClick={handleGoogleSignIn}
           disabled={loading}
         >

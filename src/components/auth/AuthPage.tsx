@@ -15,16 +15,16 @@ export const AuthPage: React.FC = () => {
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center space-x-2">
             <Cake className="h-8 w-8 text-pink-500" />
-            <h1 className="text-3xl font-bold text-gray-900">ConfeiFlow</h1>
+            <h1 className="text-3xl font-bold text-foreground">ConfeiFlow</h1>
           </div>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Sistema completo de gestão para confeitarias
           </p>
         </div>
 
         {isLogin ? <LoginForm /> : <RegisterForm />}
 
-        <Card>
+        <Card className="bg-card border-border">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">
@@ -33,7 +33,7 @@ export const AuthPage: React.FC = () => {
               <Button
                 variant="link"
                 onClick={() => setIsLogin(!isLogin)}
-                className="p-0 h-auto font-normal"
+                className="p-0 h-auto font-normal text-primary hover:text-primary/80"
               >
                 {isLogin ? "Criar conta gratuita" : "Fazer login"}
               </Button>
