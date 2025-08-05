@@ -41,9 +41,9 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <Card className="w-full max-w-md bg-card border-border">
+    <Card className="w-full max-w-md bg-background border-0 shadow-none">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-card-foreground">
+        <CardTitle className="text-2xl font-bold text-center text-foreground">
           Bem-vindo de volta
         </CardTitle>
         <CardDescription className="text-center text-muted-foreground">
@@ -92,7 +92,7 @@ export const LoginForm: React.FC = () => {
             <Separator className="w-full border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
+            <span className="bg-background px-2 text-muted-foreground">
               ou continue com
             </span>
           </div>

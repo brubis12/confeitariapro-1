@@ -10,7 +10,7 @@ export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-orange-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center space-x-2">
@@ -24,7 +24,7 @@ export const AuthPage: React.FC = () => {
 
         {isLogin ? <LoginForm /> : <RegisterForm />}
 
-        <Card className="bg-card border-border">
+        <Card className="bg-background border-0 shadow-none">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">
