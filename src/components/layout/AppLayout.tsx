@@ -19,7 +19,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <Header onMenuToggle={() => {}} />
             </div>
           </header>
-          <main className="flex-1 px-6 py-8 bg-background overflow-auto max-w-full">
+          <main className="flex-1 p-6 bg-background overflow-auto max-w-full">
             <div className="max-w-7xl mx-auto w-full">
               {children}
             </div>
