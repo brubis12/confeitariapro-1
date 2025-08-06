@@ -17,7 +17,6 @@ import Settings from './pages/Settings';
 import Upgrade from './pages/Upgrade';
 import Production from './pages/Production';
 import Loyalty from './pages/Loyalty';
-import WhatsApp from './pages/WhatsApp';
 
 import './App.css';
 
@@ -36,7 +35,6 @@ function App() {
             <Route path="/reports" element={<AppLayout><Reports /></AppLayout>} />
             <Route path="/production" element={<AppLayout><Production /></AppLayout>} />
             <Route path="/loyalty" element={<AppLayout><Loyalty /></AppLayout>} />
-            <Route path="/whatsapp" element={<AppLayout><WhatsApp /></AppLayout>} />
             <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
             <Route path="/upgrade" element={<AppLayout><Upgrade /></AppLayout>} />
             <Route path="*" element={<NotFound />} />
