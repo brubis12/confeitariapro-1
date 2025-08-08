@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Lock, User, Chrome } from 'lucide-react';
+import { Mail, Lock, User, Chrome, Phone } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const RegisterForm: React.FC = () => {
@@ -14,14 +14,22 @@ export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPhoneForGoogle, setShowPhoneForGoogle] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!phone.trim()) {
+      toast.error('Número de telefone é obrigatório');
+      return;
+    }
+    
     setLoading(true);
 
     try {
-      await signUp(email, password, fullName);
+      await signUp(email, password, fullName, phone);
       toast.success('Conta criada com sucesso! Verifique seu email.');
     } catch (error: any) {
       toast.error(error.message || 'Erro ao criar conta');
@@ -31,9 +39,19 @@ export const RegisterForm: React.FC = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!showPhoneForGoogle) {
+      setShowPhoneForGoogle(true);
+      return;
+    }
+
+    if (!phone.trim()) {
+      toast.error('Número de telefone é obrigatório');
+      return;
+    }
+
     setLoading(true);
     try {
-      await signInWithGoogle();
+      await signInWithGoogle(phone);
     } catch (error: any) {
       toast.error(error.message || 'Erro ao fazer login com Google');
     } finally {
@@ -63,6 +81,21 @@ export const RegisterForm: React.FC = () => {
                 placeholder="Seu nome completo"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                className="pl-10 bg-background border-input text-foreground"
+                required
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="text-foreground">Telefone *</Label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="pl-10 bg-background border-input text-foreground"
                 required
               />
@@ -115,6 +148,24 @@ export const RegisterForm: React.FC = () => {
           </div>
         </div>
         
+        {showPhoneForGoogle && (
+          <div className="space-y-2">
+            <Label htmlFor="phoneGoogle" className="text-foreground">Telefone para Google *</Label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="phoneGoogle"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="pl-10 bg-background border-input text-foreground"
+                required
+              />
+            </div>
+          </div>
+        )}
+        
         <Button
           variant="outline"
           className="w-full border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -122,7 +173,7 @@ export const RegisterForm: React.FC = () => {
           disabled={loading}
         >
           <Chrome className="mr-2 h-4 w-4" />
-          Google
+          {showPhoneForGoogle ? 'Continuar com Google' : 'Informar telefone para Google'}
         </Button>
       </CardContent>
     </Card>

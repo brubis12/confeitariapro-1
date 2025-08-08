@@ -3,6 +3,7 @@ export interface Profile {
   id: string;
   full_name: string | null;
   avatar_url: string | null;
+  phone: string;
   plan: 'free' | 'basic' | 'premium';
   updated_at: string | null;
   subscription_expires_at: string | null;
