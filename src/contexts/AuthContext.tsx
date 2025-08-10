@@ -83,12 +83,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const checkExistingPhone = async (phone: string) => {
+    try {
+      const cleanPhone = phone.replace(/\D/g, '');
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('phone', cleanPhone)
+        .limit(1);
+
+      if (error) {
+        console.error('Error checking phone:', error);
+        return false;
+      }
+
+      return data && data.length > 0;
+    } catch (error) {
+      console.error('Error checking existing phone:', error);
+      return false;
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   };
 
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // Verificar se o telefone já está cadastrado
+    const phoneExists = await checkExistingPhone(cleanPhone);
+    if (phoneExists) {
+      throw new Error('Este telefone já está cadastrado no sistema.');
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -96,7 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: fullName,
-          phone: phone,
+          phone: cleanPhone,
         },
       },
     });
@@ -109,12 +138,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithGoogle = async (phone?: string) => {
+    if (phone) {
+      const cleanPhone = phone.replace(/\D/g, '');
+      
+      // Verificar se o telefone já está cadastrado
+      const phoneExists = await checkExistingPhone(cleanPhone);
+      if (phoneExists) {
+        throw new Error('Este telefone já está cadastrado no sistema.');
+      }
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/`,
         queryParams: phone ? {
-          phone: phone
+          phone: phone.replace(/\D/g, '')
         } : undefined
       },
     });
