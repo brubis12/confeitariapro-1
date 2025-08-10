@@ -60,18 +60,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, plan, updated_at, subscription_expires_at, subscription_status')
+        .select('id, full_name, avatar_url, phone, plan, updated_at, subscription_expires_at, subscription_status')
         .eq('id', userId)
         .single();
 
       if (error) throw error;
       
-      // Ensure the plan field is properly typed and include all required fields
       const profileData: Profile = {
         id: data.id,
         full_name: data.full_name,
         avatar_url: data.avatar_url,
-        phone: '', // Temporary placeholder until the phone column is properly added
+        phone: data.phone || '',
         plan: (data.plan as 'free' | 'basic' | 'premium') || 'free',
         updated_at: data.updated_at,
         subscription_expires_at: data.subscription_expires_at,

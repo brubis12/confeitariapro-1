@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Mail, Lock, User, Chrome, Phone } from 'lucide-react';
 import { toast } from 'sonner';
+
 export const RegisterForm: React.FC = () => {
   const {
     signUp,
@@ -17,7 +19,7 @@ export const RegisterForm: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPhoneForGoogle, setShowPhoneForGoogle] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone.trim()) {
@@ -34,13 +36,10 @@ export const RegisterForm: React.FC = () => {
       setLoading(false);
     }
   };
+
   const handleGoogleSignIn = async () => {
-    if (!showPhoneForGoogle) {
-      setShowPhoneForGoogle(true);
-      return;
-    }
     if (!phone.trim()) {
-      toast.error('Número de telefone é obrigatório');
+      toast.error('Número de telefone é obrigatório para cadastro com Google');
       return;
     }
     setLoading(true);
@@ -52,7 +51,9 @@ export const RegisterForm: React.FC = () => {
       setLoading(false);
     }
   };
-  return <Card className="w-full max-w-md bg-background border-0 shadow-none">
+
+  return (
+    <Card className="w-full max-w-md bg-background border-0 shadow-none">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center text-foreground">
           Criar conta
@@ -67,31 +68,72 @@ export const RegisterForm: React.FC = () => {
             <Label htmlFor="fullName" className="text-foreground">Nome completo</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="fullName" type="text" placeholder="Seu nome completo" value={fullName} onChange={e => setFullName(e.target.value)} className="pl-10 bg-background border-input text-foreground" required />
+              <Input 
+                id="fullName" 
+                type="text" 
+                placeholder="Seu nome completo" 
+                value={fullName} 
+                onChange={e => setFullName(e.target.value)} 
+                className="pl-10 bg-background border-input text-foreground" 
+                required 
+              />
             </div>
           </div>
+          
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-foreground">Telefone *</Label>
             <div className="relative">
               <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="phone" type="tel" placeholder="(11) 99999-9999" value={phone} onChange={e => setPhone(e.target.value)} className="pl-10 bg-background border-input text-foreground" required />
+              <Input 
+                id="phone" 
+                type="tel" 
+                placeholder="(11) 99999-9999" 
+                value={phone} 
+                onChange={e => setPhone(e.target.value)} 
+                className="pl-10 bg-background border-input text-foreground" 
+                required 
+              />
             </div>
           </div>
+          
           <div className="space-y-2">
             <Label htmlFor="email" className="text-foreground">Email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="email" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} className="pl-10 bg-background border-input text-foreground" required />
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="seu@email.com" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                className="pl-10 bg-background border-input text-foreground" 
+                required 
+              />
             </div>
           </div>
+          
           <div className="space-y-2">
             <Label htmlFor="password" className="text-foreground">Senha</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="password" type="password" placeholder="Sua senha" value={password} onChange={e => setPassword(e.target.value)} className="pl-10 bg-background border-input text-foreground" required minLength={6} />
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="Sua senha" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)} 
+                className="pl-10 bg-background border-input text-foreground" 
+                required 
+                minLength={6} 
+              />
             </div>
           </div>
-          <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading}>
+          
+          <Button 
+            type="submit" 
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90" 
+            disabled={loading}
+          >
             {loading ? 'Criando conta...' : 'Criar conta'}
           </Button>
         </form>
@@ -107,12 +149,16 @@ export const RegisterForm: React.FC = () => {
           </div>
         </div>
         
-        {showPhoneForGoogle}
-        
-        <Button variant="outline" className="w-full border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground" onClick={handleGoogleSignIn} disabled={loading}>
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={handleGoogleSignIn} 
+          disabled={loading}
+        >
           <Chrome className="mr-2 h-4 w-4" />
-          {showPhoneForGoogle ? 'Continuar com Google' : 'Informar telefone para Google'}
+          Google
         </Button>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
