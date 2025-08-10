@@ -497,6 +497,7 @@ export type Database = {
           avatar_url: string | null
           full_name: string | null
           id: string
+          phone: string | null
           plan: string
           subscription_expires_at: string | null
           subscription_status: string | null
@@ -506,6 +507,7 @@ export type Database = {
           avatar_url?: string | null
           full_name?: string | null
           id: string
+          phone?: string | null
           plan?: string
           subscription_expires_at?: string | null
           subscription_status?: string | null
@@ -515,6 +517,7 @@ export type Database = {
           avatar_url?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
           plan?: string
           subscription_expires_at?: string | null
           subscription_status?: string | null
