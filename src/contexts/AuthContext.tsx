@@ -83,9 +83,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const cleanPhoneNumber = (phone: string): string => {
+    // Remove all non-digit characters and ensure it's in the format "5548991294456"
+    const cleaned = phone.replace(/\D/g, '');
+    
+    // If it starts with +55, remove the +
+    if (cleaned.startsWith('55')) {
+      return cleaned;
+    }
+    
+    // If it's a Brazilian number without country code, add 55
+    if (cleaned.length === 11 || cleaned.length === 10) {
+      return '55' + cleaned;
+    }
+    
+    return cleaned;
+  };
+
   const checkExistingPhone = async (phone: string) => {
     try {
-      const cleanPhone = phone.replace(/\D/g, '');
+      const cleanPhone = cleanPhoneNumber(phone);
       const { data, error } = await supabase
         .from('profiles')
         .select('id')
@@ -110,10 +127,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, fullName: string, phone: string) => {
-    const cleanPhone = phone.replace(/\D/g, '');
+    const cleanPhone = cleanPhoneNumber(phone);
     
     // Verificar se o telefone já está cadastrado
-    const phoneExists = await checkExistingPhone(cleanPhone);
+    const phoneExists = await checkExistingPhone(phone);
     if (phoneExists) {
       throw new Error('Este telefone já está cadastrado no sistema.');
     }
@@ -152,10 +169,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let queryParams = undefined;
     
     if (phone) {
-      const cleanPhone = phone.replace(/\D/g, '');
+      const cleanPhone = cleanPhoneNumber(phone);
       
       // Verificar se o telefone já está cadastrado
-      const phoneExists = await checkExistingPhone(cleanPhone);
+      const phoneExists = await checkExistingPhone(phone);
       if (phoneExists) {
         throw new Error('Este telefone já está cadastrado no sistema.');
       }
@@ -177,6 +194,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) throw new Error('No user logged in');
+    
+    // Se está atualizando o telefone, limpe o formato
+    if (updates.phone) {
+      updates.phone = cleanPhoneNumber(updates.phone);
+    }
     
     const { error } = await supabase
       .from('profiles')
