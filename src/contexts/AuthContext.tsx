@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -120,22 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const checkExistingEmail = async (email: string) => {
-    try {
-      const { data, error } = await supabase.auth.admin.listUsers();
-      
-      if (error) {
-        console.error('Error checking email:', error);
-        return false;
-      }
-
-      return data.users.some(user => user.email === email);
-    } catch (error) {
-      console.error('Error checking existing email:', error);
-      return false;
-    }
-  };
-
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
@@ -169,20 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       },
     });
     
-    if (error) {
-      // Melhorar mensagens de erro específicas
-      if (error.message?.includes('User already registered') || error.message?.includes('already registered')) {
-        throw new Error('Este email já está cadastrado no sistema.');
-      } else if (error.message?.includes('Email rate limit exceeded')) {
-        throw new Error('Muitas tentativas de cadastro. Aguarde alguns minutos.');
-      } else if (error.message?.includes('Invalid email')) {
-        throw new Error('Email inválido. Verifique o formato.');
-      } else if (error.message?.includes('Password')) {
-        throw new Error('Senha muito fraca. Use pelo menos 6 caracteres.');
-      } else {
-        throw error;
-      }
-    }
+    if (error) throw error;
     
     // Log adicional para verificar se o usuário foi criado
     console.log('Usuário criado:', data.user);

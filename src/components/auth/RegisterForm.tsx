@@ -28,24 +28,6 @@ export const RegisterForm: React.FC = () => {
     return emailRegex.test(email);
   };
 
-  const validatePassword = (password: string) => {
-    const hasMinLength = password.length >= 6;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    
-    return {
-      isValid: hasMinLength,
-      isStrong: hasMinLength && hasUpperCase && hasLowerCase && hasNumbers,
-      suggestions: [
-        !hasMinLength && 'Mínimo 6 caracteres',
-        !hasUpperCase && 'Uma letra maiúscula',
-        !hasLowerCase && 'Uma letra minúscula',
-        !hasNumbers && 'Um número'
-      ].filter(Boolean)
-    };
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -71,44 +53,40 @@ export const RegisterForm: React.FC = () => {
     }
 
     if (!validateEmail(email)) {
-      toast.error('Email deve ter um formato válido (exemplo: nome@email.com)');
+      toast.error('Email deve ter um formato válido');
       return;
     }
 
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      toast.error(`Senha muito fraca: ${passwordValidation.suggestions.join(', ')}`);
+    if (!password.trim()) {
+      toast.error('Senha é obrigatória');
       return;
     }
 
-    if (!passwordValidation.isStrong) {
-      toast.warning(`Senha aceita, mas recomendamos: ${passwordValidation.suggestions.join(', ')}`);
+    if (password.length < 6) {
+      toast.error('Senha deve ter pelo menos 6 caracteres');
+      return;
     }
 
     setLoading(true);
     try {
       await signUp(email, password, fullName, phone);
-      toast.success('Conta criada com sucesso! Verifique seu email para confirmar.');
+      toast.success('Conta criada com sucesso! Verifique seu email.');
     } catch (error: any) {
       console.error('Erro no cadastro:', error);
       
       // Tratamento específico de erros
       if (error.message?.includes('User already registered')) {
-        toast.error('Este email já está cadastrado. Tente fazer login ou usar outro email.');
+        toast.error('Este email já está cadastrado. Tente fazer login.');
       } else if (error.message?.includes('Email rate limit exceeded')) {
-        toast.error('Muitas tentativas de cadastro. Aguarde alguns minutos antes de tentar novamente.');
+        toast.error('Muitas tentativas de cadastro. Tente novamente em alguns minutos.');
       } else if (error.message?.includes('Invalid email')) {
-        toast.error('Email inválido. Verifique o formato (exemplo: nome@email.com).');
-      } else if (error.message?.includes('telefone já está cadastrado')) {
-        toast.error('Este número de telefone já está cadastrado no sistema. Use outro número.');
+        toast.error('Email inválido. Verifique o formato do email.');
       } else if (error.message?.includes('Password')) {
-        toast.error('Senha não atende aos critérios de segurança. Use pelo menos 6 caracteres.');
-      } else if (error.message?.includes('email')) {
-        toast.error('Este email já está em uso. Tente fazer login ou use outro email.');
+        toast.error('Senha muito fraca. Use pelo menos 6 caracteres.');
       } else if (error.message?.includes('phone')) {
-        toast.error('Este telefone já está cadastrado no sistema. Use outro número.');
+        toast.error('Este telefone já está cadastrado no sistema.');
       } else {
-        toast.error(error.message || 'Erro ao criar conta. Verifique os dados e tente novamente.');
+        toast.error(error.message || 'Erro ao criar conta. Tente novamente.');
       }
     } finally {
       setLoading(false);
@@ -133,10 +111,8 @@ export const RegisterForm: React.FC = () => {
     } catch (error: any) {
       console.error('Erro no login com Google:', error);
       
-      if (error.message?.includes('telefone já está cadastrado')) {
-        toast.error('Este número de telefone já está cadastrado. Use outro número ou faça login.');
-      } else if (error.message?.includes('phone')) {
-        toast.error('Este telefone já está cadastrado no sistema. Use outro número.');
+      if (error.message?.includes('phone')) {
+        toast.error('Este telefone já está cadastrado no sistema.');
       } else {
         toast.error(error.message || 'Erro ao fazer login com Google. Tente novamente.');
       }
@@ -246,20 +222,6 @@ export const RegisterForm: React.FC = () => {
                 disabled={loading}
               />
             </div>
-            {password && (
-              <div className="text-xs text-muted-foreground mt-1">
-                {(() => {
-                  const validation = validatePassword(password);
-                  if (validation.isStrong) {
-                    return <span className="text-green-600">✓ Senha forte</span>;
-                  } else if (validation.isValid) {
-                    return <span className="text-yellow-600">⚠ Senha aceitável</span>;
-                  } else {
-                    return <span className="text-red-600">✗ Senha muito fraca</span>;
-                  }
-                })()}
-              </div>
-            )}
           </div>
           
           <Button 
