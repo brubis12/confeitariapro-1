@@ -118,7 +118,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Este telefone já está cadastrado no sistema.');
     }
 
-    const { error } = await supabase.auth.signUp({
+    // Log dos dados que estão sendo enviados para debug
+    console.log('Dados sendo enviados no signUp:', {
+      email,
+      fullName,
+      phone: cleanPhone
+    });
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -129,7 +136,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       },
     });
+    
     if (error) throw error;
+    
+    // Log adicional para verificar se o usuário foi criado
+    console.log('Usuário criado:', data.user);
   };
 
   const signOut = async () => {
@@ -138,6 +149,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithGoogle = async (phone?: string) => {
+    let queryParams = undefined;
+    
     if (phone) {
       const cleanPhone = phone.replace(/\D/g, '');
       
@@ -146,15 +159,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (phoneExists) {
         throw new Error('Este telefone já está cadastrado no sistema.');
       }
+      
+      queryParams = {
+        phone: cleanPhone
+      };
     }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/`,
-        queryParams: phone ? {
-          phone: phone.replace(/\D/g, '')
-        } : undefined
+        queryParams
       },
     });
     if (error) throw error;
